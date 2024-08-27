@@ -285,10 +285,10 @@ class Client extends EventEmitter implements
         $deferred = new Deferred();
         $this->resolveHostname($hostname)
             ->then(
-                function($ip) use($deferred, $port) {
+                function($ip) use($deferred, $port): void {
                     $deferred->resolve('tcp://' . $ip . ':' . $port);
                 },
-                function($error) use ($deferred) {
+                function($error) use ($deferred): void {
                     $deferred->reject($error);
                 }
             );
@@ -376,7 +376,7 @@ class Client extends EventEmitter implements
         if (!method_exists($logger, $level)) {
             throw new \DomainException("Invalid log level '$level'");
         }
-        return function($message) use ($connection, $level, $prefix, $logger) {
+        return function($message) use ($connection, $level, $prefix, $logger): void {
             $output = sprintf('%s %s%s', $connection->getMask(), $prefix, trim($message));
             call_user_func(array($logger, $level), $output);
         };
@@ -470,7 +470,7 @@ class Client extends EventEmitter implements
     protected function getReadCallback(WriteStream $write, ConnectionInterface $connection)
     {
         $logger = $this->getLogger();
-        return function($message) use ($write, $connection, $logger) {
+        return function($message) use ($write, $connection, $logger): void {
             $this->processInput($message, $write, $connection);
             $this->emit('irc.received', array($message, $write, $connection, $logger));
         };
@@ -489,7 +489,7 @@ class Client extends EventEmitter implements
     protected function getWriteCallback(WriteStream $write, ConnectionInterface $connection)
     {
         $logger = $this->getLogger();
-        return function($message) use ($write, $connection, $logger) {
+        return function($message) use ($write, $connection, $logger): void {
             $this->emit('irc.sent', array($message, $write, $connection, $logger));
         };
     }
@@ -505,7 +505,7 @@ class Client extends EventEmitter implements
     protected function getErrorCallback(ConnectionInterface $connection)
     {
         $logger = $this->getLogger();
-        return function($exception) use ($connection, $logger) {
+        return function($exception) use ($connection, $logger): void {
             $this->emit('connect.error', array($exception, $connection, $logger));
         };
     }
@@ -527,7 +527,7 @@ class Client extends EventEmitter implements
     protected function getEndCallback(ReadStream $read, WriteStream $write, ConnectionInterface $connection, TimerInterface $timer)
     {
         $logger = $this->getLogger();
-        return function() use ($read, $write, $connection, $timer, $logger) {
+        return function() use ($read, $write, $connection, $timer, $logger): void {
             $this->removeActiveConnection($connection);
             $this->emit('connect.end', array($connection, $logger));
             $this->cancelTimer($timer);
@@ -549,7 +549,7 @@ class Client extends EventEmitter implements
     protected function getTickCallback(WriteStream $write, ConnectionInterface $connection)
     {
         $logger = $this->getLogger();
-        return function() use ($write, $connection, $logger) {
+        return function() use ($write, $connection, $logger): void {
             $this->emit('irc.tick', array($write, $connection, $logger));
         };
     }
@@ -632,10 +632,10 @@ class Client extends EventEmitter implements
     protected function addUnsecuredConnection(ConnectionInterface $connection)
     {
         $this->getRemote($connection)->then(
-            function($remote) use($connection) {
+            function($remote) use($connection): void {
                 $this->initializeConnection($remote, $connection);
             },
-            function($error) use($connection) {
+            function($error) use($connection): void {
                 $this->emitConnectionError($error, $connection);
             }
         );
@@ -676,11 +676,11 @@ class Client extends EventEmitter implements
         $this->getSecureConnector($connection)
             ->connect($hostname . ':' . $port)
             ->then(
-                function(DuplexStreamInterface $stream) use ($connection) {
+                function(DuplexStreamInterface $stream) use ($connection): void {
                     $this->initializeStream($stream, $connection);
                     $this->emit('connect.after.each', array($connection, $connection->getData('write')));
                 },
-                function($error) use($connection) {
+                function($error) use($connection): void {
                     $this->emitConnectionError($error, $connection);
                 }
             );
@@ -761,7 +761,7 @@ class Client extends EventEmitter implements
             $connections = array($connections);
         }
 
-        $this->on('connect.error', function($message, $connection, $logger) {
+        $this->on('connect.error', function($message, $connection, $logger): void {
             $logger->error($message);
         });
 

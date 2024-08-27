@@ -12,6 +12,7 @@ namespace Phergie\Irc\Tests\Client\React;
 
 use Phake;
 use Phergie\Irc\Client\React\ReadStream;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for \Phergie\Irc\Client\React\ReadStream.
@@ -19,7 +20,7 @@ use Phergie\Irc\Client\React\ReadStream;
  * @category Phergie
  * @package Phergie\Irc\Client\React
  */
-class ReadStreamTest extends \PHPUnit_Framework_TestCase
+class ReadStreamTest extends TestCase
 {
     /**
      * Tests setParser().

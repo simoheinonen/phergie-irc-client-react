@@ -12,6 +12,7 @@ namespace Phergie\Irc\Tests\Client\React;
 
 use Phake;
 use Phergie\Irc\Client\React\WriteStream;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for \Phergie\Irc\Client\React\WriteStream.
@@ -19,7 +20,7 @@ use Phergie\Irc\Client\React\WriteStream;
  * @category Phergie
  * @package Phergie\Irc\Client\React
  */
-class WriteStreamTest extends \PHPUnit_Framework_TestCase
+class WriteStreamTest extends TestCase
 {
     /**
      * Tests that WriteStream implements GeneratorInterface.
@@ -67,8 +68,8 @@ class WriteStreamTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $method
      * @param array $arguments
-     * @dataProvider getProxyingMethods
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProxyingMethods')]
     public function testProxyingToGenerator($method, array $arguments = array())
     {
         $msg = $method . '_msg';
@@ -94,7 +95,7 @@ class WriteStreamTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider for testProxyingToGenerator().
      */
-    public function getProxyingMethods()
+    public static function getProxyingMethods()
     {
         return array(
             array('ircPass', array('password')),

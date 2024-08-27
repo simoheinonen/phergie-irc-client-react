@@ -1,7 +1,11 @@
 {
     "name": "phergie/phergie-irc-client-react",
     "description": "IRC client library built on React",
-    "keywords": [ "irc", "client", "react" ],
+    "keywords": [
+        "irc",
+        "client",
+        "react"
+    ],
     "license": "BSD-2-Clause",
     "support": {
         "email": "team@phergie.org",
@@ -10,22 +14,19 @@
         "source": "https://github.com/phergie/phergie-irc-client-react"
     },
     "require": {
-        "php": ">=5.5",
-        "phergie/phergie-irc-parser": "~2.0",
-        "phergie/phergie-irc-generator": "~1.5",
-        "phergie/phergie-irc-connection": "~2.0",
-        "react/event-loop": "^1.0 || ^0.5",
-        "react/stream": "^1.0 || ^0.7 || ^0.6 || ^0.5 || ^0.4",
-        "react/socket": "^1.0 || ^0.8 || ^0.7",
-        "react/dns": "~0.4.0",
-        "react/promise": "~2.0",
-        "psr/log": "~1.0",
-        "monolog/monolog": "~1.6"
+        "php": "^8.3",
+        "phergie/phergie-irc-parser": "dev-master",
+        "phergie/phergie-irc-generator": "dev-master",
+        "phergie/phergie-irc-connection": "dev-master",
+        "react/event-loop": "^1.5",
+        "react/stream": "^1.4",
+        "react/socket": "^1.3",
+        "react/dns": "^1.13.0",
+        "react/promise": "^2.11",
+        "psr/log": "^3.0",
+        "monolog/monolog": "^3.7"
     },
-    "require-dev": {
-        "phergie/phergie-irc-bot-react-development": "~1.0.0"
-    },
-    "conflict" : {
+    "conflict": {
         "phergie/phergie-irc-plugin-react-pong": "*"
     },
     "autoload": {
@@ -38,9 +39,24 @@
             "Phergie\\Irc\\Tests\\Client\\React\\": "tests"
         }
     },
-    "config": {
-        "platform": {
-            "php": "5.5.23"
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/simoheinonen/phergie-irc-connection"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/simoheinonen/phergie-irc-generator"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/simoheinonen/phergie-irc-parser"
         }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^11.3",
+        "phake/phake": "^4.5",
+        "dg/bypass-finals": "^1.8",
+        "rector/rector": "^1.2"
     }
 }

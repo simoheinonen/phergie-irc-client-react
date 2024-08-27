@@ -18,6 +18,7 @@ use Phergie\Irc\Client\React\Exception;
 use Phergie\Irc\Client\React\ReadStream;
 use Phergie\Irc\Client\React\WriteStream;
 use Phergie\Irc\ConnectionInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for \Phergie\Irc\Client\React\Client.
@@ -25,7 +26,7 @@ use Phergie\Irc\ConnectionInterface;
  * @category Phergie
  * @package Phergie\Irc\Client\React
  */
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends TestCase
 {
     /**
      * Port on which to test client/server stream code
@@ -56,7 +57,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * Performs common setup used across most tests.
      */
-    public function setUp()
+    public function setUp(): void
     {
         // Set up a local mock server to listen on a particular port so that
         // code for establishing a client connection via PHP streams can be
@@ -74,7 +75,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     /**
      * Performs common cleanup used across most tests.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         // Shut down the mock server connection
         fclose($this->server);
@@ -192,7 +193,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $command = $php . ' ' . $script . ' 2>&1';
         $output = shell_exec($command);
-        $this->assertRegExp('/^[0-9]{4}(-[0-9]{2}){2} [0-9]{2}(:[0-9]{2}){2} DEBUG test \\[\\]$/', $output);
+
+        $this->assertMatchesRegularExpression('/^[0-9]{4}(-[0-9]{2}){2} [0-9]{2}(:[0-9]{2}){2} DEBUG test \\[\\]$/', $output);
     }
 
     /**
@@ -402,7 +404,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         Phake::verify($onStream)->on($onEvent, Phake::capture($callback));
         $callback($this->message);
         Phake::verify($this->client)->emit($emitEvent, Phake::capture($params));
-        $this->assertInternalType('array', $params);
+        $this->assertIsArray($params);
         $this->assertCount(4, $params);
         $this->assertSame($this->message, $params[0]);
         $this->assertInstanceOf('\Phergie\Irc\Client\React\WriteStream', $params[1]);
@@ -468,7 +470,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         Phake::verify($readStream)->on('error', Phake::capture($callback));
         $callback($this->message);
         Phake::verify($this->client)->emit('connect.error', Phake::capture($params));
-        $this->assertInternalType('array', $params);
+        $this->assertIsArray($params);
         $this->assertCount(3, $params);
         $this->assertSame($this->message, $params[0]);
         $this->assertSame($connection, $params[1]);
@@ -488,7 +490,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->addConnection($connection);
 
         Phake::verify($this->client)->emit('connect.error', Phake::capture($params));
-        $this->assertInternalType('array', $params);
+        $this->assertIsArray($params);
         $this->assertCount(3, $params);
         $this->assertSame('Something went wrong', $params[0]);
         $this->assertSame($connection, $params[1]);
@@ -511,7 +513,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->addConnection($connection);
 
         Phake::verify($this->client)->emit('connect.error', Phake::capture($params));
-        $this->assertInternalType('array', $params);
+        $this->assertIsArray($params);
         $this->assertCount(3, $params);
         $this->assertSame('Connection failed', $params[0]);
         $this->assertSame($connection, $params[1]);
@@ -549,7 +551,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         Phake::verify($stream)->on('end', Phake::capture($callback));
         call_user_func($callback);
         Phake::verify($this->client)->emit('connect.end', Phake::capture($params));
-        $this->assertInternalType('array', $params);
+        $this->assertIsArray($params);
         $this->assertCount(2, $params);
         $this->assertSame($connection, $params[0]);
         $this->assertSame($logger, $params[1]);
@@ -585,7 +587,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         Phake::verify($stream)->on('end', Phake::capture($callback));
         call_user_func($callback);
         Phake::verify($this->client)->emit('connect.end', Phake::capture($params));
-        $this->assertInternalType('array', $params);
+        $this->assertIsArray($params);
         $this->assertCount(2, $params);
         $this->assertSame($connection, $params[0]);
         $this->assertSame($logger, $params[1]);
@@ -618,7 +620,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         Phake::verify($loop)->addPeriodicTimer(0.2, Phake::capture($callback));
         $callback();
         Phake::verify($this->client)->emit('irc.tick', Phake::capture($params));
-        $this->assertInternalType('array', $params);
+        $this->assertIsArray($params);
         $this->assertCount(3, $params);
         $this->assertSame($writeStream, $params[0]);
         $this->assertSame($connection, $params[1]);
@@ -810,7 +812,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testAddTimer()
     {
         $interval = 5;
-        $callback = function() { };
+        $callback = function(): void { };
         $timer = $this->getMockTimer();
         $loop = $this->getMockLoop();
         Phake::when($loop)->addTimer($interval, $callback)->thenReturn($timer);
@@ -825,7 +827,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testAddPeriodicTimer()
     {
         $interval = 5;
-        $callback = function() { };
+        $callback = function(): void { };
         $timer = $this->getMockTimer();
         $loop = $this->getMockLoop();
         Phake::when($loop)->addPeriodicTimer($interval, $callback)->thenReturn($timer);
